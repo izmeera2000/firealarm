@@ -2,8 +2,8 @@
 #include <HTTPClient.h>
 
 // WiFi credentials
-const char* ssid = "YOUR_SSID";
-const char* password = "YOUR_PASSWORD";
+const char* ssid = "MuSTaQiM";
+const char* password = "mustaqim0919";
 
 // Telegram Bot Token and Group Chat ID
 String botToken = "7994581873:AAF3r1Z4DRVhToLokWzlqZVXUcdM4_1bG3A";
@@ -21,7 +21,7 @@ void setup() {
   Serial.println("Connected to WiFi");
 
   // Send the message to the Telegram group
-  sendMessageToTelegram(message);
+  sendMessageToTelegram("The bluetooth device has connected successfully");
 }
 
 void loop() {
@@ -29,7 +29,7 @@ void loop() {
 }
 
 void sendMessageToTelegram(String message) {
-  String url = "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatID + "&text=" + "";
+  String url = "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatID + "&text=" + message;
 
   HTTPClient http;
   http.begin(url);
