@@ -9,7 +9,7 @@ const char* ssid = "MuSTaQiM";          // Replace with your WiFi SSID
 const char* password = "mustaqim0919";  // Replace with your WiFi password
 
 // Telegram Bot credentials
-String botToken = "7994581873:AAF3r1Z4DRVhToLokWzlqZVXUcdM4_1bG3A";
+String botToken = "7994581873";
 String chatID = "-1002401346969";  // Replace with your group chat ID
 
 // WiFiClientSecure client;
