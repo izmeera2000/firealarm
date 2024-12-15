@@ -5,7 +5,7 @@
 #include <HTTPClient.h>
 
 // WiFi credentials
-const char* ssid = "NoName";          // Replace with your WiFi SSID
+const char* ssid = "NoName";        // Replace with your WiFi SSID
 const char* password = "54548484";  // Replace with your WiFi password
 
 // Telegram Bot credentials
@@ -46,7 +46,7 @@ void setup() {
   pinMode(SMOKE_DIGITAL_PIN, INPUT);
   pinMode(WARNING_LIGHT_RELAY_PIN, OUTPUT);  // Initialize relay control pin
 
-      sendMessageToTelegram("Turn ON");
+  sendMessageToTelegram("Fire Alarm ON");
 }
 
 void loop() {
