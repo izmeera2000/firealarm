@@ -76,8 +76,8 @@ void loop() {
     }
     Serial.println("🚨 Alert! Warning light ON!");
 
-    digitalWrite(WARNING_LIGHT_RELAY_PIN, LOW);  // Turn on the relay to activate the 12V warning light
-    delay(1000);                                 // Optional: Add delay to control light behavior
+    digitalWrite(WARNING_LIGHT_RELAY_PIN, HIGH);  // Turn on the relay to activate the 12V warning light
+    delay(1000);                                  // Optional: Add delay to control light behavior
   } else {
     if (flameDetected || smokeDetected) {
       Serial.println("All clear. No flame or smoke detected. Warning light OFF.");
@@ -87,8 +87,8 @@ void loop() {
       flameDetected = false;
       smokeDetected = false;
     }
-    digitalWrite(WARNING_LIGHT_RELAY_PIN, HIGH);  // Turn off the relay to deactivate the 12V warning light
-    delay(1000);                                  // Optional: Add delay for turning light off
+    digitalWrite(WARNING_LIGHT_RELAY_PIN, LOW);  // Turn off the relay to deactivate the 12V warning light
+    delay(1000);                                 // Optional: Add delay for turning light off
   }
 
   // Log sensor data to Serial Monitor
