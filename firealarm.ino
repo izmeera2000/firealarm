@@ -1,125 +1,28 @@
-#include <WiFi.h>
-#include <WiFiClientSecure.h>
-#include <UniversalTelegramBot.h>
-#include <ArduinoJson.h>
-#include <HTTPClient.h>
+/*********
+  Rui Santos
+  Complete project details at https://RandomNerdTutorials.com/esp32-relay-module-ac-web-server/
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+*********/
 
-// WiFi credentials
-const char* ssid = "NoName";        // Replace with your WiFi SSID
-const char* password = "54548484";  // Replace with your WiFi password
-
-// Telegram Bot credentials
-String Token1 = "7994581873";
-String Token2 = ":AAF3r1Z4DRVhToLokWzlqZVXUcdM4_1bG3A";
-String Chat = "-1002401346969";  // Replace with your group chat ID
-
-// WiFiClientSecure client;
-// UniversalTelegramBot bot(BOTtoken, client);
-
-// Sensor pins
-#define FLAME_SENSOR_PIN 34   // Analog pin for flame sensor
-#define FLAME_DIGITAL_PIN 32  // Digital pin for flame sensor
-#define SMOKE_SENSOR_PIN 35   // Analog pin for smoke sensor
-#define SMOKE_DIGITAL_PIN 33  // Digital pin for smoke sensor
-
-// Warning light relay pin
-#define WARNING_LIGHT_RELAY_PIN 25  // GPIO pin for relay controlling the 12V LED
-
-// Variables to track alert state
-bool flameDetected = false;
-bool smokeDetected = false;
+const int relay = 25;
 
 void setup() {
   Serial.begin(115200);
-
-  // Connect to WiFi
-  Serial.print("Connecting to WiFi...");
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.print(".");
-  }
-  Serial.println("\nConnected to WiFi!");
-
-  // Initialize sensor pins
-  pinMode(FLAME_DIGITAL_PIN, INPUT);
-  pinMode(SMOKE_DIGITAL_PIN, INPUT);
-  pinMode(WARNING_LIGHT_RELAY_PIN, OUTPUT);  // Initialize relay control pin
-
-  sendMessageToTelegram("Fire Alarm ON");
+  pinMode(relay, OUTPUT);
 }
 
 void loop() {
-  // Read flame sensor values
-  int flameAnalogValue = analogRead(FLAME_SENSOR_PIN);
-  int flameDigitalValue = digitalRead(FLAME_DIGITAL_PIN);
-
-  // Read smoke sensor values
-  int smokeAnalogValue = analogRead(SMOKE_SENSOR_PIN);
-  int smokeDigitalValue = digitalRead(SMOKE_DIGITAL_PIN);
-
-  // Warning light logic
-  if (flameDigitalValue == LOW || smokeDigitalValue == LOW) {  // Flame or smoke detected
-    if (!flameDetected && flameDigitalValue == LOW) {
-      Serial.println("🔥 Alert! Flame detected!");
-      // bot.sendMessage(CHAT_ID, "🔥 Alert! Flame detected!", "");
-      sendMessageToTelegram("🔥 Alert! Flame detected!");
-
-      flameDetected = true;
-    }
-    if (!smokeDetected && smokeDigitalValue == LOW) {
-      Serial.println("💨 Alert! Smoke detected!");
-      // bot.sendMessage(CHAT_ID, "💨 Alert! Smoke detected!", "");
-      sendMessageToTelegram("💨 Alert! Smoke detected!");
-
-      smokeDetected = true;
-    }
-    Serial.println("🚨 Alert! Warning light ON!");
-
-    digitalWrite(WARNING_LIGHT_RELAY_PIN, HIGH);  // Turn on the relay to activate the 12V warning light
-    delay(1000);                                  // Optional: Add delay to control light behavior
-  } else {
-    if (flameDetected || smokeDetected) {
-      Serial.println("All clear. No flame or smoke detected. Warning light OFF.");
-      // bot.sendMessage(CHAT_ID, "✅ All clear. No flame or smoke detected.", "");
-      sendMessageToTelegram("✅ All clear. No flame or smoke detected.");
-
-      flameDetected = false;
-      smokeDetected = false;
-    }
-    digitalWrite(WARNING_LIGHT_RELAY_PIN, LOW);  // Turn off the relay to deactivate the 12V warning light
-    delay(1000);                                 // Optional: Add delay for turning light off
-  }
-
-  // Log sensor data to Serial Monitor
-  Serial.print("Flame (Analog): ");
-  Serial.println(flameAnalogValue);
-  Serial.print("Flame (Digital): ");
-  Serial.println(flameDigitalValue);
-  Serial.print("Smoke (Analog): ");
-  Serial.println(smokeAnalogValue);
-  Serial.print("Smoke (Digital): ");
-  Serial.println(smokeDigitalValue);
-  Serial.println("-------------------------------");
-
-  delay(500);  // Main loop delay to prevent spamming
-}
-
-
-void sendMessageToTelegram(String message) {
-  String url = "https://api.telegram.org/bot" + Token1 + Token2 + "/sendMessage?chat_id=" + Chat + "&text=" + message;
-
-  HTTPClient http;
-  http.begin(url);
-  int httpCode = http.GET();  // Send GET request
-
-  if (httpCode > 0) {
-    String payload = http.getString();
-    Serial.println("Message sent successfully!");
-    Serial.println(payload);  // Print response for debugging
-  } else {
-    Serial.println("Error sending message");
-  }
-
-  http.end();  // Close connection
+  // Normally Open configuration, send LOW signal to let current flow
+  // (if you're usong Normally Closed configuration send HIGH signal)
+  // digitalWrite(relay, LOW);
+  // Serial.println("Current Flowing");
+  // delay(5000); 
+  
+  // Normally Open configuration, send HIGH signal stop current flow
+  // (if you're usong Normally Closed configuration send LOW signal)
+  digitalWrite(relay, HIGH);
+  Serial.println("Current not Flowing");
+  delay(5000);
 }
